@@ -2,21 +2,63 @@
 {% load static %}
 <html lang="ko">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
         <title>Small Business - Start Bootstrap Template</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
         <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+        <style>
+            .navbar {
+                padding-left: 10px; /* 왼쪽 여백 설정 */
+                padding-right: 10px; /* 오른쪽 여백 설정 */
+            }
+            .navbar-brand {
+                margin-right: auto; /* 로고를 왼쪽 끝에 붙입니다 */
+            }
+            .navbar-nav {
+                margin-left: auto; /* 메뉴를 오른쪽 끝에 붙입니다 */
+            }
+            .navbar-nav .nav-item {
+                margin-left: 10px; /* 각 메뉴 항목 사이의 간격 설정 */
+            }
+        </style>
     </head>
     <body>
-        {% include "navbar.html" %}
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/" style="font-size: 2rem; font-weight: bold;">KREAM</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/company/">Company Info</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/mysite/">Product</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link">Logout ({{ user.username }})</button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        
         {% block content %}
         {% endblock %}
+        
         {% include "footer.html" %}
     </body>
 </html>

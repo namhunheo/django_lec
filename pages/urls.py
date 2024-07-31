@@ -1,3 +1,4 @@
+
 """
 URL configuration for my_project project.
 

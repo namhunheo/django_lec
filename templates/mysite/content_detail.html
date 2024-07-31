@@ -1,7 +1,70 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>{{ content_list.title }}</h2>
-<div>
-    {{ content_list.content }}
-</div>
-{% endblock %}
+<div style="text-align: center;">
+    <div style="margin-top: 30px;">
+        <h2>{{ content.title }}</h2>
+    </div>
+
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                {% if content.image %}
+                    <img class="img-fluid rounded mb-4 mb-lg-0 fixed-size-image" src="{{ content.image.url }}" alt="{{ content.title }}">
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                <div>
+                    {% if content.title == "이달의 인기상품" %}
+                        <p>상품명 : 뉴발란스 신발 530</p>
+                        <p>사이즈: 230, 240, 250, 270, 280</p>
+                        <p>색상: 그레이, 화이트</p>
+                    {% elif content.title == "에디터 추천상품" %}
+                        <p> 상품명 : 나이키 코트 비전 로우 넥스트 네이처 남성용</p>
+                        <p>사이즈: 270, 275, 280, 285, 290</p>
+                        <p>색상: 화이트, 블랙, 블루</p>
+                    {% else %}
+                        <p>상품 설명을 준비 중입니다.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                <form method="post" class="mb-4" action="{% url 'mysite:comment_create' content.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <textarea id="content" name="content" class="form-control" rows="3" placeholder="내용을 입력해주세요."></textarea>
+                    <button type="submit" class="btn btn-primary">submit</button>
+                </form>
+                {% for comment in content.comment_set.all %}
+                <div class="d-flex">
+                    <div class="ms-3">
+                        <div class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp; {{ comment.create_date }}
+                            {% if comment.create_date != comment.modify_date %}
+                                / 수정일자: {{ comment.modify_date }}
+                            {% endif %}
+                            {% if request.user == comment.author %}
+                                <a href="{% url 'mysite:comment_update' comment.id %}" class="btn btn-sm btn-outline-secondary">수정</a>
+                                <a href="{% url 'mysite:comment_delete' comment.id %}" class="btn btn-sm btn-outline-secondary">삭제</a>
+                            {% endif %}
+                        </div>
+                        {{ comment.content }}
+                    </div>
+                </div>
+                <br/>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+    
+    <style>
+    .fixed-size-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover; /* 이미지의 비율을 유지하면서 크기를 맞추도록 합니다 */
+    }
+    </style>

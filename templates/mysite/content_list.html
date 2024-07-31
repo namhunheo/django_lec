@@ -1,21 +1,37 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% block content %}
 <!-- Page Content-->
 <div class="container px-4 px-lg-5">
     <!-- Heading Row-->
     {% if content_list %}
-    {% for content in content_list %}
-    <div class="row gx-4 gx-lg-5 align-items-center my-5">
-        <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
-        <div class="col-lg-5">
-            <h1 class="font-weight-light">{{ content.title }}</h1>
-            <p>{{ content.content | truncatewords:30 }}</p>
-            <a class="btn btn-primary" href="{% url 'detail' content.id %}">상품 상세보기</a>
+        {% for content in content_list %}
+        <div class="row gx-4 gx-lg-5 align-items-center my-5">
+            <div class="col-lg-7">
+                {% if content.image %}
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="{{ content.image.url }}" alt="{{ content.title }}" />
+                {% else %}
+                    <img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." />
+                {% endif %}
+            </div>
+            <div class="col-lg-5">
+                <h1 class="font-weight-light">{{ content.title }}</h1>
+                {% if content.title == "이달의 인기상품" %}
+                    <p>뉴발란스 신발 530</p>
+                    <p>사이즈: 230, 240, 250, 270, 280</p>
+                    <p>색상: 그레이, 화이트</p>
+                {% elif content.title == "에디터 추천 상품" %}
+                    <p>나이키 코트 비전 로우 넥스트 네이처 남성용</p>
+                    <p>사이즈: 270, 275, 280, 285, 290</p>
+                    <p>색상: 화이트, 블랙, 블루</p>
+                {% else %}
+                    <p>상품 설명을 준비 중입니다.</p>
+                {% endif %}
+                <a class="btn btn-primary" href="{% url 'mysite:detail' content.id %}">상품 상세보기</a>
+            </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
     {% else %}
-    <p>content가 없습니다.</p>
+        <p>content가 없습니다.</p>
     {% endif %}
 </div>
 {% endblock %}
